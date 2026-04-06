@@ -1,0 +1,35 @@
+<mxfile host="65bd71144e">
+    <diagram id="VMFOiyjxGfHwXAvgevsH" name="Page-1">
+        <mxGraphModel dx="1856" dy="840" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="7" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Gives Combat engine the data needed to do the calculations" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="7">
+                    <mxGeometry x="0.025" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=none;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="2" target="3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Gives character properties for the game&amp;nbsp; manager to manage" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="10">
+                    <mxGeometry x="-0.0531" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="2" value="Character&lt;div&gt;&lt;ul&gt;&lt;li&gt;Represents a fighter in the game&lt;/li&gt;&lt;li&gt;Name(string)&lt;/li&gt;&lt;li&gt;MaxHp(int)&lt;/li&gt;&lt;li&gt;CurrentHp(int)&lt;/li&gt;&lt;li&gt;Element(enum)&lt;/li&gt;&lt;li&gt;BaseDamage(int)&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="80" width="220" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="GameManager&lt;div&gt;&lt;ul&gt;&lt;li&gt;Manages the overall state and win/loss logic&lt;/li&gt;&lt;li&gt;PlayerOne(character)&lt;/li&gt;&lt;li&gt;PlayerTwo(character)&lt;/li&gt;&lt;li&gt;IsGameover(bool)&lt;/li&gt;&lt;li&gt;CurrentTurnMessage(string)&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="400" y="420" width="220" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="CombatEngine&lt;div&gt;&lt;ul&gt;&lt;li&gt;Handles the math for atacks&lt;/li&gt;&lt;li&gt;CriritcalHitMulitplier(float)&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="680" y="80" width="220" height="220" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
