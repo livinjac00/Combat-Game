@@ -1,35 +1,29 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 
 <PageTitle>Combat Game</PageTitle>
 
+<h1>Welcome to the Combat Game!</h1>
 
-<div style="position: absolute; left: 500px; top: 100px;">
-    enemy Health: @enemy.Health
+<div style="position: absolute; left: 500px; top: 400px;">
+    <button @onclick="GoToCharacterSelect">Start Game</button>
+    <br />
+    <br />
+    <button @onclick="ExitGame">Exit Game</button>
 </div>
-
-<div style="position: absolute; left: 800px; top: 100px;">
-    player Health: @character.Health
-</div>
-
-<br />
-<button @onclick="() => CombatEngine.AttackPlayer(character, enemy)">Attack</button>
-
-
-
-
-
-
-
-
 
 
 @code {
-    Character character = new Character("Bob", 100, 10, ElementType.Fire, 5);
-    Character enemy = new Character("Bob", 100, 10, ElementType.Fire, 5);
+    public void GoToCharacterSelect()
+    {
+        NavigationManager.NavigateTo($"/character-select");
+    }
 
-
-
+    public void ExitGame()
+    {
+        Environment.Exit(0);
+    }
 
 
 

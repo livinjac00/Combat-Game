@@ -1,0 +1,20 @@
+@page "/character-select"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<h1>Character Select</h1>
+
+<div style="position: absolute; left: 500px; top: 400px;">
+    <button @onclick="GoToGame">Start Game</button>
+</div>
+
+
+
+@code {
+    public void GoToGame()
+    {
+        NavigationManager.NavigateTo($"/game");
+    }
+}
+
+
