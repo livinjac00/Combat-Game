@@ -1,0 +1,15 @@
+@page "/end-screen"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<h1>Game Over!</h1>
+
+<p>Player: @character.Name Won!</p>
+
+
+
+
+@code{
+    Character character = new Character("Bob", 100, 10, ElementType.Fire, 5);
+}
+
