@@ -19,9 +19,9 @@ public static class CharacterSelection
         };
     }
 
-    /// <summary>
+    
     /// Sets up players by asking for names and then letting them pick a character.
-    /// </summary>
+    
     public static void SetupGame(int playerCount)
     {
         _players.Clear();
