@@ -4,7 +4,8 @@ using System.Collections.Generic;
 public static class CharacterSelection
 {
     public static List<Character> AvailableCharacters { get; private set; }
-    public static Character SelectedCharacter { get; private set; }
+    private static List<Player> _players = new List<Player>();
+    public static IReadOnlyList<Player> Players => _players;
 
     static CharacterSelection()
     {
@@ -18,22 +19,51 @@ public static class CharacterSelection
         };
     }
 
-    public static void SelectCharacter(int index)
+    /// <summary>
+    /// Sets up players by asking for names and then letting them pick a character.
+    /// </summary>
+    public static void SetupGame(int playerCount)
     {
-        if (index >= 0 && index < AvailableCharacters.Count)
+        _players.Clear();
+        for (int i = 1; i <= playerCount; i++)
         {
-            SelectedCharacter = AvailableCharacters[index];
-            Console.WriteLine($"Selected character: {SelectedCharacter.Name}");
+            Console.WriteLine($"\n--- Player {i} Setup ---");
+            Console.Write("Enter your name: ");
+            string name = Console.ReadLine() ?? $"Player {i}";
+
+            DisplayAvailableCharacters();
+            Console.Write("Choose a character (enter number): ");
+            
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 0 && choice < AvailableCharacters.Count)
+            {
+                var selected = AvailableCharacters[choice];
+                _players.Add(new Player(i, name, selected));
+                Console.WriteLine($"Player {i} set as {name} using {selected.Name}!");
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Assigning first character by default.");
+                _players.Add(new Player(i, name, AvailableCharacters[0]));
+            }
         }
     }
 
     public static void DisplayAvailableCharacters()
     {
-        Console.WriteLine("Available Characters:");
+        Console.WriteLine("\nAvailable Characters:");
         for (int i = 0; i < AvailableCharacters.Count; i++)
         {
             var c = AvailableCharacters[i];
             Console.WriteLine($"{i}: {c.Name} (Health: {c.Health}, Element: {c.Element})");
+        }
+    }
+
+    public static void DisplayCurrentPlayers()
+    {
+        Console.WriteLine("\nFinal Setup:");
+        foreach (var p in _players)
+        {
+            Console.WriteLine($"P{p.PlayerNumber}: {p.Name} as {p.PlayerCharacter.Name}");
         }
     }
 }
