@@ -4,25 +4,41 @@ public class Character
     public int Health{ get; set;}
     
     public int AttackDamage{ get; set;}
+    public int BaseAttackDamage { get; set; }
     public ElementType Element{ get; set;}
     public int ElementDamageBonus{ get; set;}
+    public bool IsDodging { get; set; } = false;
 
     public Character(string name, int health, int attackDamage, ElementType element, int elementDamageBonus)
     {
         Name = name;
         Health = health;
         AttackDamage = attackDamage;
+        BaseAttackDamage = attackDamage;
         Element = element;
         ElementDamageBonus = elementDamageBonus;
     }
 
     public void TakeDamage(int damage)
     {
+        if (IsDodging)
+        {
+            Console.WriteLine($"{Name} dodged the attack!");
+            IsDodging = false; // Reset dodge after one use
+            return;
+        }
+
         Health -= damage;
         if (Health < 0) Health = 0;
         
         Console.WriteLine($"{Name} took {damage} damage!");
         DisplayHealthBar();
+    }
+
+    public void ResetStatus()
+    {
+        IsDodging = false;
+        AttackDamage = BaseAttackDamage;
     }
 
     public void DisplayHealthBar()
