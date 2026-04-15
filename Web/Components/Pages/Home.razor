@@ -1,8 +1,10 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 
 <PageTitle>Combat Game</PageTitle>
 
+<h1>Welcome to the Combat Game!</h1>
 
 <div class="row">
     <div class="col">
@@ -37,10 +39,29 @@
 
 <p>@logMessage</p>
 
+<div style="position: absolute; left: 500px; top: 400px;">
+    <button @onclick="GoToCharacterSelect">Start Game</button>
+    <br />
+    <br />
+    <button @onclick="ExitGame">Exit Game</button>
+</div>
+
+
 @code {
+
     Player player = new Player(1, "Player 1", new Character("Fire Knight", 100, 20, ElementType.Fire, 5));
     Player enemy = new Player(2, "Enemy", new Character("Water Mage", 80, 15, ElementType.Water, 10));
     string logMessage = "";
+
+    public void GoToCharacterSelect()
+    {
+        NavigationManager.NavigateTo($"/character-select");
+    }
+
+    public void ExitGame()
+    {
+        Environment.Exit(0);
+    }
 
     void HandleMove(string move)
     {
@@ -60,7 +81,6 @@
                 logMessage = $"{player.Name} is in a dodging stance!";
                 break;
         }
-    }
 
     void HandleAttack(string attack)
     {
@@ -80,4 +100,6 @@
             logMessage += $" {enemy.Name} has been defeated!";
         }
     }
+
+
 }

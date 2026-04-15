@@ -1,0 +1,29 @@
+@page "/game"
+@rendermode InteractiveServer
+@inject NavigationManager navigation
+
+
+
+<div style="position: absolute; left: 500px; top: 100px;">
+    enemy Health: @enemy.Health
+</div>
+
+<div style="position: absolute; left: 800px; top: 100px;">
+    player Health: @character.Health
+</div>
+
+<br />
+<button @onclick="() => CombatEngine.AttackPlayer(character, enemy)">Attack</button>
+
+
+@code {
+    Character character = new Character("Bob", 100, 10, ElementType.Fire, 5);
+    Character enemy = new Character("Bob", 100, 10, ElementType.Fire, 5);
+
+
+    public void GoToEndScreen()
+    {
+        navigation.NavigateTo($"/end-screen");
+    }
+
+}
