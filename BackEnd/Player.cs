@@ -10,4 +10,14 @@ public class Player
         Name = name;
         PlayerCharacter = playerCharacter;
     }
+
+    public void Move()
+    {
+        AbilitySystem.PerformMovement(this);
+    }
+
+    public void Attack(Player target)
+    {
+        AbilitySystem.PerformAbility(this, target);
+    }
 }

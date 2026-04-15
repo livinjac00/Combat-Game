@@ -4,33 +4,80 @@
 <PageTitle>Combat Game</PageTitle>
 
 
-<div style="position: absolute; left: 500px; top: 100px;">
-    enemy Health: @enemy.Health
+<div class="row">
+    <div class="col">
+        <h3>Player: @player.Name (@player.PlayerCharacter.Name)</h3>
+        <p>Health: @player.PlayerCharacter.Health</p>
+        <p>Status: @(player.PlayerCharacter.IsDodging ? "Dodging" : "Normal")</p>
+    </div>
+    <div class="col text-end">
+        <h3>Enemy: @enemy.Name (@enemy.PlayerCharacter.Name)</h3>
+        <p>Health: @enemy.PlayerCharacter.Health</p>
+        <p>Status: @(enemy.PlayerCharacter.IsDodging ? "Dodging" : "Normal")</p>
+    </div>
 </div>
 
-<div style="position: absolute; left: 800px; top: 100px;">
-    player Health: @character.Health
+<hr />
+
+<h4>Move Phase</h4>
+<div class="btn-group mb-3">
+    @foreach (var move in AbilitySystem.MovementOptions)
+    {
+        <button class="btn btn-outline-primary" @onclick="() => HandleMove(move)">@move</button>
+    }
 </div>
 
-<br />
-<button @onclick="() => CombatEngine.AttackPlayer(character, enemy)">Attack</button>
+<h4>Attack Phase</h4>
+<div class="btn-group mb-3">
+    @foreach (var attack in AbilitySystem.AttackTypes)
+    {
+        <button class="btn btn-outline-danger" @onclick="() => HandleAttack(attack)">@attack</button>
+    }
+</div>
 
-
-
-
-
-
-
-
-
+<p>@logMessage</p>
 
 @code {
-    Character character = new Character("Bob", 100, 10, ElementType.Fire, 5);
-    Character enemy = new Character("Bob", 100, 10, ElementType.Fire, 5);
+    Player player = new Player(1, "Player 1", new Character("Fire Knight", 100, 20, ElementType.Fire, 5));
+    Player enemy = new Player(2, "Enemy", new Character("Water Mage", 80, 15, ElementType.Water, 10));
+    string logMessage = "";
 
+    void HandleMove(string move)
+    {
+        // Simple UI implementation of movement logic
+        switch (move)
+        {
+            case "Advance":
+                player.PlayerCharacter.AttackDamage += 2;
+                logMessage = $"{player.Name} advanced! Damage increased.";
+                break;
+            case "Retreat":
+                player.PlayerCharacter.IsDodging = true;
+                logMessage = $"{player.Name} retreated and is dodging!";
+                break;
+            case "Dodge":
+                player.PlayerCharacter.IsDodging = true;
+                logMessage = $"{player.Name} is in a dodging stance!";
+                break;
+        }
+    }
 
-
-
-
-
+    void HandleAttack(string attack)
+    {
+        CombatEngine.PerformAttack(player, enemy, attack);
+        logMessage = $"{player.Name} used {attack}!";
+        
+        // Basic AI: Enemy attacks back if still alive
+        if (enemy.PlayerCharacter.Health > 0)
+        {
+            var random = new Random();
+            var enemyAttack = AbilitySystem.AttackTypes[random.Next(AbilitySystem.AttackTypes.Count)];
+            CombatEngine.PerformAttack(enemy, player, enemyAttack);
+            logMessage += $" {enemy.Name} countered with {enemyAttack}!";
+        }
+        else
+        {
+            logMessage += $" {enemy.Name} has been defeated!";
+        }
+    }
 }

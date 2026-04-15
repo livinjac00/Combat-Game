@@ -1,16 +1,33 @@
 using System;
 
-public static class CombatEngine // Made static as suggested in main branch
+public static class CombatEngine 
 {
-    // High-level attack logic using Player objects (from Chris branch)
-    public static void PerformAttack(Player attacker, Player target)
+    
+    public static void PerformAttack(Player attacker, Player target, string attackType = "Normal")
     {
-        Console.WriteLine($"\n{attacker.Name} ({attacker.PlayerCharacter.Name}) attacks {target.Name} ({target.PlayerCharacter.Name})!");
+        Console.WriteLine($"\n{attacker.Name} ({attacker.PlayerCharacter.Name}) used {attackType} on {target.Name} ({target.PlayerCharacter.Name})!");
         
         int damage = attacker.PlayerCharacter.AttackDamage;
         
-        // Basic elemental bonus logic for the mockup
-        damage += attacker.PlayerCharacter.ElementDamageBonus;
+        
+        switch (attackType)
+        {
+            case "Heavy Attack":
+                damage = (int)(damage * 1.5);
+                Console.WriteLine("A powerful blow!");
+                break;
+            case "Light attack":
+                damage = (int)(damage * 0.8);
+                Console.WriteLine("A quick strike!");
+                break;
+            case "Elemental attack":
+                damage += attacker.PlayerCharacter.ElementDamageBonus * 2;
+                Console.WriteLine($"The power of {attacker.PlayerCharacter.Element} surges!");
+                break;
+            default:
+                damage += attacker.PlayerCharacter.ElementDamageBonus;
+                break;
+        }
         
         target.PlayerCharacter.TakeDamage(damage);
 
@@ -20,7 +37,7 @@ public static class CombatEngine // Made static as suggested in main branch
         }
     }
 
-    // Direct character attack logic (from main branch)
+    
     public static void AttackPlayer(Character AttackingPlayer, Character DefendingPlayer) 
     {
         DefendingPlayer.Health = DefendingPlayer.Health - AttackingPlayer.AttackDamage;
