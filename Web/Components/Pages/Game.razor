@@ -6,31 +6,31 @@
     
     <!-- Battle Stage Info -->
     <div style="text-align: center; padding: 10px; background: #333; color: white;">
-        <h2>@(IsPlayerTurn ? "YOUR TURN" : "ENEMY TURN")</h2>
+        <h2>@(IsPlayer1Turn ? "PLAYER 1'S TURN" : "PLAYER 2'S TURN")</h2>
     </div>
 
-    <!-- Enemy Character (Top Right) -->
+    <!-- Player 2 (Top Right) -->
     <div style="position: absolute; right: 100px; top: 80px; width: 120px; text-align: center;">
-        <div style="font-weight: bold; margin-bottom: 5px;">@enemy.Name</div>
+        <div style="font-weight: bold; margin-bottom: 5px;">@player2.Name</div>
         <div style="background-color: #ddd; width: 100%; height: 15px; border: 2px solid #555; border-radius: 8px; margin-bottom: 5px;">
-            <div style="background-color: red; width: @(enemy.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
+            <div style="background-color: red; width: @(player2.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
         </div>
-        <div>@enemy.Health / 100 HP</div>
-        <div style="width: 80px; height: 80px; background-color: #ff4d4d; margin: 10px auto; border-radius: 10px; border: 3px solid #900; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white;">
-            E
+        <div>@player2.Health / 100 HP</div>
+        <div style="width: 80px; height: 80px; background-color: #ff4d4d; margin: 10px auto; border-radius: 10px; border: 3px solid #900; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white; @(!IsPlayer1Turn ? "border-color: #00ff00; box-shadow: 0 0 15px #00ff00;" : "")">
+            P2
         </div>
     </div>
 
-    <!-- Player Character (Bottom Left) -->
+    <!-- Player 1 (Bottom Left) -->
     <div style="position: absolute; left: 100px; bottom: 150px; width: 120px; text-align: center;">
-        <div style="width: 80px; height: 80px; background-color: #4da6ff; margin: 10px auto; border-radius: 10px; border: 3px solid #0059b3; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white;">
-            P
+        <div style="width: 80px; height: 80px; background-color: #4da6ff; margin: 10px auto; border-radius: 10px; border: 3px solid #0059b3; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white; @(IsPlayer1Turn ? "border-color: #00ff00; box-shadow: 0 0 15px #00ff00;" : "")">
+            P1
         </div>
-        <div style="font-weight: bold; margin-top: 5px;">@character.Name</div>
+        <div style="font-weight: bold; margin-top: 5px;">@player1.Name</div>
         <div style="background-color: #ddd; width: 100%; height: 15px; border: 2px solid #555; border-radius: 8px; margin-top: 5px;">
-            <div style="background-color: #00ff00; width: @(character.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
+            <div style="background-color: #00ff00; width: @(player1.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
         </div>
-        <div>@character.Health / 100 HP</div>
+        <div>@player1.Health / 100 HP</div>
     </div>
 
     <!-- Combat Log / Dialogue Box -->
@@ -38,14 +38,14 @@
         <strong>> @message</strong>
     </div>
 
-    <!-- Action Menu (Only visible on Player Turn) -->
-    @if (IsPlayerTurn && !GameOver)
+    <!-- Action Menu (Shared by both players) -->
+    @if (!GameOver)
     {
         <div style="position: absolute; bottom: 30px; right: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #fff; padding: 10px; border: 3px solid #333;">
-            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Light attack")'>LIGHT ATTACK</button>
-            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Heavy Attack")'>HEAVY ATTACK</button>
-            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Elemental attack")'>ELEMENTAL</button>
-            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Dodge")'>DODGE STANCE</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: @(IsPlayer1Turn ? "#e6f3ff" : "#ffe6e6");" @onclick='() => ExecuteAction("Light attack")'>LIGHT ATTACK</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: @(IsPlayer1Turn ? "#e6f3ff" : "#ffe6e6");" @onclick='() => ExecuteAction("Heavy Attack")'>HEAVY ATTACK</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: @(IsPlayer1Turn ? "#e6f3ff" : "#ffe6e6");" @onclick='() => ExecuteAction("Elemental attack")'>ELEMENTAL</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: @(IsPlayer1Turn ? "#e6f3ff" : "#ffe6e6");" @onclick='() => ExecuteAction("Dodge")'>DODGE STANCE</button>
         </div>
     }
 </div>
@@ -53,90 +53,61 @@
 @if (GameOver)
 {
     <div style="text-align: center; margin-top: 20px;">
-        <button @onclick="ResetGame" style="padding: 15px 30px; font-size: 1.2em; cursor: pointer;">PLAY AGAIN</button>
+        <button @onclick="ResetGame" style="padding: 15px 30px; font-size: 1.2em; cursor: pointer;">REMATCH</button>
         <button @onclick="GoToEndScreen" style="padding: 15px 30px; font-size: 1.2em; cursor: pointer; margin-left: 10px;">VIEW RESULTS</button>
     </div>
 }
 
 @code {
-    Character character = new Character("Bob", 100, 10, ElementType.Fire, 5);
-    Character enemy = new Character("Enemy Bot", 100, 10, ElementType.Fire, 5);
+    Character player1 = new Character("Player 1", 100, 10, ElementType.Fire, 5);
+    Character player2 = new Character("Player 2", 100, 10, ElementType.Water, 5);
 
-    bool IsPlayerTurn = true;
+    bool IsPlayer1Turn = true;
     bool GameOver = false;
-    string message = "A wild enemy appeared! What will Bob do?";
+    string message = "Local Multi-player Battle! Player 1, choose your move.";
 
-    private async Task ExecuteAction(string actionType)
+    private void ExecuteAction(string actionType)
     {
-        if (!IsPlayerTurn || GameOver) return;
+        if (GameOver) return;
+
+        Character attacker = IsPlayer1Turn ? player1 : player2;
+        Character target = IsPlayer1Turn ? player2 : player1;
 
         if (actionType == "Dodge")
         {
-            character.IsDodging = true;
-            message = $"{character.Name} entered a defensive stance!";
+            attacker.IsDodging = true;
+            message = $"{attacker.Name} entered a defensive stance!";
         }
         else
         {
-            Player p1 = new Player(1, character.Name, character);
-            Player e1 = new Player(2, enemy.Name, enemy);
+            // Use dummy player objects to satisfy CombatEngine/AbilitySystem signatures
+            Player pAttacker = new Player(IsPlayer1Turn ? 1 : 2, attacker.Name, attacker);
+            Player pTarget = new Player(IsPlayer1Turn ? 2 : 1, target.Name, target);
 
-            CombatEngine.PerformAttack(p1, e1, actionType);
-            message = $"{character.Name} used {actionType}!";
+            CombatEngine.PerformAttack(pAttacker, pTarget, actionType);
+            message = $"{attacker.Name} used {actionType}!";
             
-            if (enemy.Health <= 0)
+            if (target.Health <= 0)
             {
-                message = $"{enemy.Name} fainted! You win!";
+                message = $"{target.Name} fainted! {attacker.Name} wins the duel!";
                 GameOver = true;
                 return;
             }
         }
 
-        IsPlayerTurn = false;
-        StateHasChanged();
-
-        // Enemy Turn Delay
-        await Task.Delay(1500);
-        await EnemyTurn();
-    }
-
-    private async Task EnemyTurn()
-    {
-        if (GameOver) return;
-
-        message = $"{enemy.Name} is thinking...";
-        StateHasChanged();
-        await Task.Delay(1000);
-
-        Player p1 = new Player(1, character.Name, character);
-        Player e1 = new Player(2, enemy.Name, enemy);
-
-        // Simple AI: Randomly pick an attack
-        string[] attacks = { "Light attack", "Heavy Attack", "Elemental attack" };
-        string chosenAttack = attacks[new Random().Next(attacks.Length)];
-
-        CombatEngine.PerformAttack(e1, p1, chosenAttack);
-        message = $"{enemy.Name} used {chosenAttack}!";
-
-        if (character.Health <= 0)
-        {
-            message = $"{character.Name} fainted... You lost.";
-            GameOver = true;
-        }
-        else
-        {
-            IsPlayerTurn = true;
-        }
-        
+        // Toggle turn
+        IsPlayer1Turn = !IsPlayer1Turn;
+        message += $" It is now { (IsPlayer1Turn ? "Player 1's" : "Player 2's") } turn.";
         StateHasChanged();
     }
 
     private void ResetGame()
     {
-        character = new Character("Bob", 100, 10, ElementType.Fire, 5);
-        enemy = new Character("Enemy Bot", 100, 10, ElementType.Fire, 5);
-        IsPlayerTurn = true;
+        player1 = new Character("Player 1", 100, 10, ElementType.Fire, 5);
+        player2 = new Character("Player 2", 100, 10, ElementType.Water, 5);
+        IsPlayer1Turn = true;
         GameOver = false;
-        message = "Game Reset! Your turn.";
+        message = "Game Reset! Player 1, choose your move.";
     }
 
     public void GoToEndScreen()
