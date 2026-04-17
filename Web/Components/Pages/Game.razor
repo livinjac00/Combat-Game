@@ -2,139 +2,141 @@
 @rendermode InteractiveServer
 @inject NavigationManager navigation
 
-<div style="position: relative; width: 100%; height: 500px; border: 1px solid black; overflow: hidden;" @onkeydown="HandleKeyDown" tabindex="0">
-    <!-- Player Character -->
-    <div style="position: absolute; left: @(playerX)px; top: @(playerY)px; width: 60px; height: 60px; background-color: blue; transition: all 0.2s; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-        P
-        <div style="position: absolute; top: -45px; width: 150px; text-align: center;">
-            <div style="font-weight: bold;">@character.Name</div>
-            <div style="background-color: #ddd; width: 100%; height: 10px; border-radius: 5px;">
-                <div style="background-color: green; width: @(character.Health)%; height: 100%; border-radius: 5px;"></div>
-            </div>
-            <div>@character.Health HP</div>
+<div style="position: relative; width: 100%; height: 500px; border: 3px solid #333; background-color: #f0f0f0; overflow: hidden; font-family: 'Courier New', Courier, monospace;">
+    
+    <!-- Battle Stage Info -->
+    <div style="text-align: center; padding: 10px; background: #333; color: white;">
+        <h2>@(IsPlayerTurn ? "YOUR TURN" : "ENEMY TURN")</h2>
+    </div>
+
+    <!-- Enemy Character (Top Right) -->
+    <div style="position: absolute; right: 100px; top: 80px; width: 120px; text-align: center;">
+        <div style="font-weight: bold; margin-bottom: 5px;">@enemy.Name</div>
+        <div style="background-color: #ddd; width: 100%; height: 15px; border: 2px solid #555; border-radius: 8px; margin-bottom: 5px;">
+            <div style="background-color: red; width: @(enemy.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
+        </div>
+        <div>@enemy.Health / 100 HP</div>
+        <div style="width: 80px; height: 80px; background-color: #ff4d4d; margin: 10px auto; border-radius: 10px; border: 3px solid #900; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white;">
+            E
         </div>
     </div>
 
-    <!-- Enemy Character -->
-    <div style="position: absolute; left: @(enemyX)px; top: @(enemyY)px; width: 60px; height: 60px; background-color: red; transition: all 0.2s; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-        E
-        <div style="position: absolute; top: -45px; width: 150px; text-align: center;">
-            <div style="font-weight: bold;">@enemy.Name</div>
-            <div style="background-color: #ddd; width: 100%; height: 10px; border-radius: 5px;">
-                <div style="background-color: red; width: @(enemy.Health)%; height: 100%; border-radius: 5px;"></div>
-            </div>
-            <div>@enemy.Health HP</div>
+    <!-- Player Character (Bottom Left) -->
+    <div style="position: absolute; left: 100px; bottom: 150px; width: 120px; text-align: center;">
+        <div style="width: 80px; height: 80px; background-color: #4da6ff; margin: 10px auto; border-radius: 10px; border: 3px solid #0059b3; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white;">
+            P
         </div>
+        <div style="font-weight: bold; margin-top: 5px;">@character.Name</div>
+        <div style="background-color: #ddd; width: 100%; height: 15px; border: 2px solid #555; border-radius: 8px; margin-top: 5px;">
+            <div style="background-color: #00ff00; width: @(character.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
+        </div>
+        <div>@character.Health / 100 HP</div>
     </div>
 
-    <!-- UI Overlay for Log -->
-    <div style="position: absolute; top: 10px; right: 10px; width: 250px; background: rgba(255,255,255,0.8); padding: 10px; border: 1px solid #ccc; max-height: 150px; overflow-y: auto;">
-        <strong>Combat Log:</strong>
-        <p style="font-size: 0.8em;">@message</p>
+    <!-- Combat Log / Dialogue Box -->
+    <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; height: 100px; background: white; border: 4px solid #333; padding: 15px; overflow-y: auto; font-size: 1.1em;">
+        <strong>> @message</strong>
     </div>
 
-    <!-- Controls Menu -->
-    <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 15px; border-top: 2px solid #333; display: flex; justify-content: space-around; align-items: center;">
-        <div>
-            <strong>Move Abilities:</strong><br/>
-            <button @onclick='() => ExecuteMove("Advance")'>Advance</button>
-            <button @onclick='() => ExecuteMove("Retreat")'>Retreat</button>
-            <button @onclick='() => ExecuteMove("Dodge")'>Dodge</button>
+    <!-- Action Menu (Only visible on Player Turn) -->
+    @if (IsPlayerTurn && !GameOver)
+    {
+        <div style="position: absolute; bottom: 30px; right: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #fff; padding: 10px; border: 3px solid #333;">
+            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Light attack")'>LIGHT ATTACK</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Heavy Attack")'>HEAVY ATTACK</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Elemental attack")'>ELEMENTAL</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer;" @onclick='() => ExecuteAction("Dodge")'>DODGE STANCE</button>
         </div>
-        
-        <div style="text-align: center;">
-            <strong>WASD:</strong> Movement | <strong>SPACE:</strong> Quick Attack<br/>
-            <button @onclick="ResetGame" style="margin-top: 5px;">Reset Game</button>
-        </div>
-
-        <div>
-            <strong>Attack Abilities:</strong><br/>
-            <button @onclick='() => ExecuteAttack("Light attack")'>Light</button>
-            <button @onclick='() => ExecuteAttack("Heavy Attack")'>Heavy</button>
-            <button @onclick='() => ExecuteAttack("Elemental attack")'>Elemental</button>
-        </div>
-    </div>
+    }
 </div>
+
+@if (GameOver)
+{
+    <div style="text-align: center; margin-top: 20px;">
+        <button @onclick="ResetGame" style="padding: 15px 30px; font-size: 1.2em; cursor: pointer;">PLAY AGAIN</button>
+        <button @onclick="GoToEndScreen" style="padding: 15px 30px; font-size: 1.2em; cursor: pointer; margin-left: 10px;">VIEW RESULTS</button>
+    </div>
+}
 
 @code {
     Character character = new Character("Bob", 100, 10, ElementType.Fire, 5);
-    Character enemy = new Character("Enemy", 100, 10, ElementType.Fire, 5);
+    Character enemy = new Character("Enemy Bot", 100, 10, ElementType.Fire, 5);
 
-    int playerX = 150;
-    int playerY = 200;
-    int enemyX = 550;
-    int enemyY = 200;
+    bool IsPlayerTurn = true;
+    bool GameOver = false;
+    string message = "A wild enemy appeared! What will Bob do?";
 
-    string message = "Use WASD or buttons to interact!";
-
-    private void HandleKeyDown(KeyboardEventArgs e)
+    private async Task ExecuteAction(string actionType)
     {
-        switch (e.Key.ToLower())
+        if (!IsPlayerTurn || GameOver) return;
+
+        if (actionType == "Dodge")
         {
-            case "w": playerY -= 20; break;
-            case "s": playerY += 20; break;
-            case "a": playerX -= 20; break;
-            case "d": playerX += 20; break;
-            case " ": ExecuteAttack("Normal"); break;
-        }
-    }
-
-    private void ExecuteMove(string moveType)
-    {
-        // Based on AbilitySystem.PerformMovement conceptual logic
-        switch (moveType)
-        {
-            case "Advance":
-                playerX += 40;
-                character.AttackDamage += 2;
-                message = "Advanced! Damage buffed +2.";
-                break;
-            case "Retreat":
-                playerX -= 40;
-                character.IsDodging = true;
-                message = "Retreated! Evasion increased.";
-                break;
-            case "Dodge":
-                character.IsDodging = true;
-                message = "Prepared to dodge next attack.";
-                break;
-        }
-    }
-
-    private void ExecuteAttack(string attackType)
-    {
-        // Distance check
-        double distance = Math.Sqrt(Math.Pow(playerX - enemyX, 2) + Math.Pow(playerY - enemyY, 2));
-
-        if (distance < 120)
-        {
-            // Use dummy players for AbilitySystem/CombatEngine logic
-            Player p1 = new Player(1, "Player", character);
-            Player e1 = new Player(2, "Enemy", enemy);
-
-            CombatEngine.PerformAttack(p1, e1, attackType);
-            message = $"Used {attackType}! Enemy Health: {enemy.Health}";
-
-            if (enemy.Health <= 0)
-            {
-                message = "Enemy defeated! Victory!";
-                StateHasChanged();
-                Task.Delay(2000).ContinueWith(_ => GoToEndScreen());
-            }
+            character.IsDodging = true;
+            message = $"{character.Name} entered a defensive stance!";
         }
         else
         {
-            message = "Target out of range! Get closer.";
+            Player p1 = new Player(1, character.Name, character);
+            Player e1 = new Player(2, enemy.Name, enemy);
+
+            CombatEngine.PerformAttack(p1, e1, actionType);
+            message = $"{character.Name} used {actionType}!";
+            
+            if (enemy.Health <= 0)
+            {
+                message = $"{enemy.Name} fainted! You win!";
+                GameOver = true;
+                return;
+            }
         }
+
+        IsPlayerTurn = false;
+        StateHasChanged();
+
+        // Enemy Turn Delay
+        await Task.Delay(1500);
+        await EnemyTurn();
+    }
+
+    private async Task EnemyTurn()
+    {
+        if (GameOver) return;
+
+        message = $"{enemy.Name} is thinking...";
+        StateHasChanged();
+        await Task.Delay(1000);
+
+        Player p1 = new Player(1, character.Name, character);
+        Player e1 = new Player(2, enemy.Name, enemy);
+
+        // Simple AI: Randomly pick an attack
+        string[] attacks = { "Light attack", "Heavy Attack", "Elemental attack" };
+        string chosenAttack = attacks[new Random().Next(attacks.Length)];
+
+        CombatEngine.PerformAttack(e1, p1, chosenAttack);
+        message = $"{enemy.Name} used {chosenAttack}!";
+
+        if (character.Health <= 0)
+        {
+            message = $"{character.Name} fainted... You lost.";
+            GameOver = true;
+        }
+        else
+        {
+            IsPlayerTurn = true;
+        }
+        
+        StateHasChanged();
     }
 
     private void ResetGame()
     {
         character = new Character("Bob", 100, 10, ElementType.Fire, 5);
-        enemy = new Character("Enemy", 100, 10, ElementType.Fire, 5);
-        playerX = 150;
-        playerY = 200;
-        message = "Game Reset!";
+        enemy = new Character("Enemy Bot", 100, 10, ElementType.Fire, 5);
+        IsPlayerTurn = true;
+        GameOver = false;
+        message = "Game Reset! Your turn.";
     }
 
     public void GoToEndScreen()
