@@ -12,10 +12,10 @@ public static class CharacterSelection
         // Initialize with some default mockup characters
         AvailableCharacters = new List<Character>
         {
-            new Character("Fire Knight", 100, 20, ElementType.Fire, 5),
-            new Character("Water Mage", 80, 15, ElementType.Water, 10),
-            new Character("Earth Guardian", 120, 10, ElementType.Earth, 2),
-            new Character("Air Scout", 90, 18, ElementType.Air, 4)
+            new Character("Fire Knight", 100, 20, ElementType.Fire, 5, false),
+            new Character("Water Mage", 80, 15, ElementType.Water, 10, false),
+            new Character("Earth Guardian", 120, 10, ElementType.Earth, 2, false),
+            new Character("Air Scout", 90, 18, ElementType.Air, 4, false)
         };
     }
 
