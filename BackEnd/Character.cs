@@ -8,8 +8,9 @@ public class Character
     public ElementType Element{ get; set;}
     public int ElementDamageBonus{ get; set;}
     public bool IsDodging { get; set; } = false;
+    public bool IsSelected { get; set; } = false;
 
-    public Character(string name, int health, int attackDamage, ElementType element, int elementDamageBonus)
+    public Character(string name, int health, int attackDamage, ElementType element, int elementDamageBonus, bool isSelected)
     {
         Name = name;
         Health = health;
@@ -17,6 +18,7 @@ public class Character
         BaseAttackDamage = attackDamage;
         Element = element;
         ElementDamageBonus = elementDamageBonus;
+        IsSelected = isSelected;
     }
 
     public void TakeDamage(int damage)
