@@ -2,6 +2,12 @@ using System;
 
 public class GameEngine
 {
+    public List<Character> Characters { get; set; } = new List<Character> {
+        new Character("Fire Knight", 100, 20, ElementType.Fire, 5),
+        new Character("Water Mage", 80, 15, ElementType.Water, 10),
+        new Character("Earth Barbarian", 100, 20, ElementType.Earth, 5),
+        new Character("Air Archer", 90, 15, ElementType.Air, 7)
+    };
     public void StartGame()
     {
         Console.WriteLine("Welcome to the Combat Game Prototype!");

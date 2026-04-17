@@ -4,13 +4,46 @@
 
 <h1>Character Select</h1>
 
-<div style="position: absolute; left: 500px; top: 400px;">
+
+@foreach (var character in gameEngine.Characters)
+{
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="@GetCharacterImage(character.Name)" class="img-fluid rounded-start" alt="@character.Name">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@character.Name</h5>
+                    <p class="card-text">Health: @character.Health</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@* <div style="position: absolute; left: 500px; top: 400px;">
     <button @onclick="GoToGame">Start Game</button>
-</div>
+</div> *@
 
 
 
 @code {
+
+    public GameEngine gameEngine = new GameEngine();
+    public string GetCharacterImage(string characterName)
+    {
+        return characterName switch
+        {
+            "Fire Knight" => "Knight.svg",
+            "Water Mage" => "Mage.svg",
+            "Earth Barbarian" => "Barbarian.svg",
+            "Air Archer" => "Mage.svg"
+        };
+    }
+
+
     public void GoToGame()
     {
         NavigationManager.NavigateTo($"/game");
