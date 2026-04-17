@@ -4,13 +4,77 @@
 
 <h1>Character Select</h1>
 
-<div style="position: absolute; left: 500px; top: 400px;">
-    <button @onclick="GoToGame">Start Game</button>
-</div>
+
+@foreach (var character in gameEngine.Characters)
+{
+    <div class="card mb-3" style="max-width: 300px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="@GetCharacterImage(character.Name)" class="img-fluid rounded-start" alt="@character.Name">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@character.Name</h5>
+                    <p class="card-text">Health: @character.Health</p>
+                    @if(!character.IsSelected)
+                    {
+                    <button class="btn btn-primary" @onclick="() => SelectCharacter(character)">Select</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Player1Selected && Player2Selected)
+{
+    <div style="position: absolute; left: 700px; top: 300px;">
+        Both players have selected their characters! Click "Start Game" to begin.
+    </div>
+    <div style="position: absolute; left: 700px; top: 350px;">
+        <button @onclick="GoToGame">Start Game</button>
+    </div>
+}
 
 
 
 @code {
+
+    public GameEngine gameEngine = new GameEngine();
+    public bool Player1Selected = false;
+    public bool Player2Selected = false;
+
+
+
+    public void SelectCharacter(Character character)
+    {
+        if (!Player1Selected)
+        {
+            gameEngine.Player1 = new Player(1, "Player 1", character);
+            Player1Selected = true;
+            character.IsSelected = true;
+        }
+        else if (!Player2Selected)
+        {
+            gameEngine.Player2 = new Player(2, "Player 2", character);
+            Player2Selected = true;
+            character.IsSelected = true;
+        }
+    }
+
+
+    public string GetCharacterImage(string characterName)
+    {
+        return characterName switch
+        {
+            "Fire Knight" => "Knight.svg",
+            "Water Mage" => "Mage.svg",
+            "Earth Barbarian" => "Barbarian.svg",
+            "Air Archer" => "Mage.svg"
+        };
+    }
+
+
     public void GoToGame()
     {
         NavigationManager.NavigateTo($"/game");

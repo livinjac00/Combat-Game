@@ -49,8 +49,8 @@
 
 @code {
 
-    Player player = new Player(1, "Player 1", new Character("Fire Knight", 100, 20, ElementType.Fire, 5));
-    Player enemy = new Player(2, "Enemy", new Character("Water Mage", 80, 15, ElementType.Water, 10));
+    Player player = new Player(1, "Player 1", new Character("Fire Knight", 100, 20, ElementType.Fire, 5, false));
+    Player enemy = new Player(2, "Enemy", new Character("Water Mage", 80, 15, ElementType.Water, 10, false));
     string logMessage = "";
 
     public void GoToCharacterSelect()
@@ -103,4 +103,5 @@
     }
 
 
+}
 }
