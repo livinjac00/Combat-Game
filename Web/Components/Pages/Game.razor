@@ -2,28 +2,143 @@
 @rendermode InteractiveServer
 @inject NavigationManager navigation
 
+<div style="position: relative; width: 100%; height: 500px; border: 1px solid black; overflow: hidden;" @onkeydown="HandleKeyDown" tabindex="0">
+    <!-- Player Character -->
+    <div style="position: absolute; left: @(playerX)px; top: @(playerY)px; width: 60px; height: 60px; background-color: blue; transition: all 0.2s; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+        P
+        <div style="position: absolute; top: -45px; width: 150px; text-align: center;">
+            <div style="font-weight: bold;">@character.Name</div>
+            <div style="background-color: #ddd; width: 100%; height: 10px; border-radius: 5px;">
+                <div style="background-color: green; width: @(character.Health)%; height: 100%; border-radius: 5px;"></div>
+            </div>
+            <div>@character.Health HP</div>
+        </div>
+    </div>
 
+    <!-- Enemy Character -->
+    <div style="position: absolute; left: @(enemyX)px; top: @(enemyY)px; width: 60px; height: 60px; background-color: red; transition: all 0.2s; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+        E
+        <div style="position: absolute; top: -45px; width: 150px; text-align: center;">
+            <div style="font-weight: bold;">@enemy.Name</div>
+            <div style="background-color: #ddd; width: 100%; height: 10px; border-radius: 5px;">
+                <div style="background-color: red; width: @(enemy.Health)%; height: 100%; border-radius: 5px;"></div>
+            </div>
+            <div>@enemy.Health HP</div>
+        </div>
+    </div>
 
-<div style="position: absolute; left: 500px; top: 100px;">
-    enemy Health: @enemy.Health
+    <!-- UI Overlay for Log -->
+    <div style="position: absolute; top: 10px; right: 10px; width: 250px; background: rgba(255,255,255,0.8); padding: 10px; border: 1px solid #ccc; max-height: 150px; overflow-y: auto;">
+        <strong>Combat Log:</strong>
+        <p style="font-size: 0.8em;">@message</p>
+    </div>
+
+    <!-- Controls Menu -->
+    <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 15px; border-top: 2px solid #333; display: flex; justify-content: space-around; align-items: center;">
+        <div>
+            <strong>Move Abilities:</strong><br/>
+            <button @onclick='() => ExecuteMove("Advance")'>Advance</button>
+            <button @onclick='() => ExecuteMove("Retreat")'>Retreat</button>
+            <button @onclick='() => ExecuteMove("Dodge")'>Dodge</button>
+        </div>
+        
+        <div style="text-align: center;">
+            <strong>WASD:</strong> Movement | <strong>SPACE:</strong> Quick Attack<br/>
+            <button @onclick="ResetGame" style="margin-top: 5px;">Reset Game</button>
+        </div>
+
+        <div>
+            <strong>Attack Abilities:</strong><br/>
+            <button @onclick='() => ExecuteAttack("Light attack")'>Light</button>
+            <button @onclick='() => ExecuteAttack("Heavy Attack")'>Heavy</button>
+            <button @onclick='() => ExecuteAttack("Elemental attack")'>Elemental</button>
+        </div>
+    </div>
 </div>
-
-<div style="position: absolute; left: 800px; top: 100px;">
-    player Health: @character.Health
-</div>
-
-<br />
-<button @onclick="() => CombatEngine.AttackPlayer(character, enemy)">Attack</button>
-
 
 @code {
     Character character = new Character("Bob", 100, 10, ElementType.Fire, 5);
-    Character enemy = new Character("Bob", 100, 10, ElementType.Fire, 5);
+    Character enemy = new Character("Enemy", 100, 10, ElementType.Fire, 5);
 
+    int playerX = 150;
+    int playerY = 200;
+    int enemyX = 550;
+    int enemyY = 200;
+
+    string message = "Use WASD or buttons to interact!";
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key.ToLower())
+        {
+            case "w": playerY -= 20; break;
+            case "s": playerY += 20; break;
+            case "a": playerX -= 20; break;
+            case "d": playerX += 20; break;
+            case " ": ExecuteAttack("Normal"); break;
+        }
+    }
+
+    private void ExecuteMove(string moveType)
+    {
+        // Based on AbilitySystem.PerformMovement conceptual logic
+        switch (moveType)
+        {
+            case "Advance":
+                playerX += 40;
+                character.AttackDamage += 2;
+                message = "Advanced! Damage buffed +2.";
+                break;
+            case "Retreat":
+                playerX -= 40;
+                character.IsDodging = true;
+                message = "Retreated! Evasion increased.";
+                break;
+            case "Dodge":
+                character.IsDodging = true;
+                message = "Prepared to dodge next attack.";
+                break;
+        }
+    }
+
+    private void ExecuteAttack(string attackType)
+    {
+        // Distance check
+        double distance = Math.Sqrt(Math.Pow(playerX - enemyX, 2) + Math.Pow(playerY - enemyY, 2));
+
+        if (distance < 120)
+        {
+            // Use dummy players for AbilitySystem/CombatEngine logic
+            Player p1 = new Player(1, "Player", character);
+            Player e1 = new Player(2, "Enemy", enemy);
+
+            CombatEngine.PerformAttack(p1, e1, attackType);
+            message = $"Used {attackType}! Enemy Health: {enemy.Health}";
+
+            if (enemy.Health <= 0)
+            {
+                message = "Enemy defeated! Victory!";
+                StateHasChanged();
+                Task.Delay(2000).ContinueWith(_ => GoToEndScreen());
+            }
+        }
+        else
+        {
+            message = "Target out of range! Get closer.";
+        }
+    }
+
+    private void ResetGame()
+    {
+        character = new Character("Bob", 100, 10, ElementType.Fire, 5);
+        enemy = new Character("Enemy", 100, 10, ElementType.Fire, 5);
+        playerX = 150;
+        playerY = 200;
+        message = "Game Reset!";
+    }
 
     public void GoToEndScreen()
     {
-        navigation.NavigateTo($"/end-screen");
+        navigation.NavigateTo("/end-screen");
     }
-
 }
