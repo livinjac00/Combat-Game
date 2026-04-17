@@ -4,7 +4,7 @@ public class GameEngine
 {
     public void StartGame()
     {
-        Console.WriteLine("Welcome to the Combat Game Prototype!");
+        Console.WriteLine("Welcome to the Combat Game!");
         
         
         CharacterSelection.SetupGame(2);
@@ -42,7 +42,7 @@ public class GameEngine
             }
 
             round++;
-            if (round > 20) // Safety break
+            if (round > 20) 
             {
                 Console.WriteLine("Game reached maximum rounds. It's a draw!");
                 gameRunning = false;

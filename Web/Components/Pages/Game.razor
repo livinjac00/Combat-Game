@@ -9,7 +9,7 @@
         <h2>@(IsPlayer1Turn ? "PLAYER 1'S TURN" : "PLAYER 2'S TURN")</h2>
     </div>
 
-    <!-- Player 2 (Top Right) -->
+    // player top right 
     <div style="position: absolute; right: 100px; top: 80px; width: 120px; text-align: center;">
         <div style="font-weight: bold; margin-bottom: 5px;">@player2.Name</div>
         <div style="background-color: #ddd; width: 100%; height: 15px; border: 2px solid #555; border-radius: 8px; margin-bottom: 5px;">
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <!-- Player 1 (Bottom Left) -->
+    // player bottom left 
     <div style="position: absolute; left: 100px; bottom: 150px; width: 120px; text-align: center;">
         <div style="width: 80px; height: 80px; background-color: #4da6ff; margin: 10px auto; border-radius: 10px; border: 3px solid #0059b3; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white; @(IsPlayer1Turn ? "border-color: #00ff00; box-shadow: 0 0 15px #00ff00;" : "")">
             P1
@@ -38,7 +38,7 @@
         <strong>> @message</strong>
     </div>
 
-    <!-- Action Menu (Shared by both players) -->
+    // shared by both players 
     @if (!GameOver)
     {
         <div style="position: absolute; bottom: 30px; right: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #fff; padding: 10px; border: 3px solid #333;">
@@ -80,7 +80,7 @@
         }
         else
         {
-            // Use dummy player objects to satisfy CombatEngine/AbilitySystem signatures
+            
             Player pAttacker = new Player(IsPlayer1Turn ? 1 : 2, attacker.Name, attacker);
             Player pTarget = new Player(IsPlayer1Turn ? 2 : 1, target.Name, target);
 
