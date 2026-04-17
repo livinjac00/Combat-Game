@@ -103,8 +103,8 @@
 
     private void ResetGame()
     {
-        player1 = new Character("Player 1", 100, 10, ElementType.Fire, 5);
-        player2 = new Character("Player 2", 100, 10, ElementType.Water, 5);
+        player1 = new Character("Player 1", 100, 10, ElementType.Fire, 5, false);
+        player2 = new Character("Player 2", 100, 10, ElementType.Water, 5, false);
         IsPlayer1Turn = true;
         GameOver = false;
         message = "Game Reset! Player 1, choose your move.";
