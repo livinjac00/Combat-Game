@@ -65,7 +65,7 @@
 
     void HandleMove(string move)
     {
-        // Simple UI implementation of movement logic
+       
         switch (move)
         {
             case "Advance":
@@ -88,7 +88,7 @@
         CombatEngine.PerformAttack(player, enemy, attack);
         logMessage = $"{player.Name} used {attack}!";
         
-        // Basic AI: Enemy attacks back if still alive
+        
         if (enemy.PlayerCharacter.Health > 0)
         {
             var random = new Random();
