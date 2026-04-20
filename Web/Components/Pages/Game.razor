@@ -64,6 +64,7 @@
 
     bool IsPlayer1Turn = true;
     bool GameOver = false;
+    string winnerName = "";
     string message = "Local Multi-player Battle! Player 1, choose your move.";
 
     private void ExecuteAction(string actionType)
@@ -90,6 +91,7 @@
             if (target.Health <= 0)
             {
                 message = $"{target.Name} fainted! {attacker.Name} wins the duel!";
+                winnerName = attacker.Name;
                 GameOver = true;
                 return;
             }
@@ -107,11 +109,12 @@
         player2 = new Character("Player 2", 100, 10, ElementType.Water, 5, false);
         IsPlayer1Turn = true;
         GameOver = false;
+        winnerName = "";
         message = "Game Reset! Player 1, choose your move.";
     }
 
     public void GoToEndScreen()
     {
-        navigation.NavigateTo("/end-screen");
+        navigation.NavigateTo($"/end-screen?winner={Uri.EscapeDataString(winnerName)}");
     }
 }

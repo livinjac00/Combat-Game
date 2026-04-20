@@ -1,15 +1,37 @@
 @page "/end-screen"
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.WebUtilities
 
-<h1>Game Over!</h1>
+<div style="text-align: center; margin-top: 50px; font-family: 'Courier New', Courier, monospace;">
+    <h1 style="font-size: 3em; color: #333;">Game Over!</h1>
+    
+    <div style="background-color: #f8f9fa; border: 4px solid #333; display: inline-block; padding: 40px; margin: 20px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+        <h2 style="color: #28a745; font-size: 2em;">VICTOR DECLARED</h2>
+        <p style="font-size: 2.5em; font-weight: bold; margin: 20px 0;">@WinnerName</p>
+        <p style="font-size: 1.2em; color: #666;">Congratulations on a hard-fought battle!</p>
+    </div>
 
-<p>Player: @character.Name Won!</p>
+    <div style="margin-top: 30px;">
+        <button @onclick='() => NavigationManager.NavigateTo("/game")' style="padding: 15px 40px; font-size: 1.2em; background-color: #333; color: white; border: none; cursor: pointer; border-radius: 5px;">PLAY AGAIN</button>
+        <button @onclick='() => NavigationManager.NavigateTo("/")' style="padding: 15px 40px; font-size: 1.2em; background-color: #6c757d; color: white; border: none; cursor: pointer; border-radius: 5px; margin-left: 10px;">MAIN MENU</button>
+    </div>
+</div>
 
+@code {
+    [Parameter]
+    public string? WinnerName { get; set; }
 
-
-
-@code{
-    Character character = new Character("Bob", 100, 10, ElementType.Fire, 5, false);
+    protected override void OnInitialized()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("winner", out var winner))
+        {
+            WinnerName = winner;
+        }
+        else
+        {
+            WinnerName = "Unknown Warrior";
+        }
+    }
 }
-
