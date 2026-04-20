@@ -5,9 +5,9 @@ public class GameEngine
 {
     public List<Character> Characters { get; set; } = new List<Character> {
         new Character("Fire Knight", 100, 20, ElementType.Fire, 5, false),
-        new Character("Water Mage", 80, 15, ElementType.Water, 10, false),
+        new Character("Water Mage", 100, 20, ElementType.Water, 5, false),
         new Character("Earth Barbarian", 100, 20, ElementType.Earth, 5, false),
-        new Character("Air Archer", 90, 15, ElementType.Air, 7, false)
+        new Character("Air Archer", 100, 20, ElementType.Air, 5, false)
     };
 
     public Player? Player1 { get; set; }
