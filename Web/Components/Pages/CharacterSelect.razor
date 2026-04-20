@@ -4,6 +4,16 @@
 
 <h1>Character Select</h1>
 
+<p>Player 1 and Player 2, please select your characters:</p>
+
+@if(!Player1Selected)
+{
+    <p>Player 1, select your character:</p>
+}
+else if(!Player2Selected)
+{
+    <p>Player 2, select your character:</p>
+}
 
 @foreach (var character in gameEngine.Characters)
 {

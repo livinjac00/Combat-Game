@@ -5,8 +5,8 @@ public class CombatLogicTests
     [Fact]
     public void HeavyAttackDealsExtraDamage()
     {
-        Character attackerChar = new Character("Attacker", 100, 20, ElementType.Fire, 0);
-        Character targetChar = new Character("Target", 100, 20, ElementType.Fire, 0);
+        Character attackerChar = new Character("Attacker", 100, 20, ElementType.Fire, 0, false);
+        Character targetChar = new Character("Target", 100, 20, ElementType.Fire, 0, false);
         Player attacker = new Player(1, "Player 1", attackerChar);
         Player target = new Player(2, "Player 2", targetChar);
 
@@ -19,8 +19,8 @@ public class CombatLogicTests
     [Fact]
     public void LightAttackDealsReducedDamage()
     {
-        Character attackerChar = new Character("Attacker", 100, 20, ElementType.Fire, 0);
-        Character targetChar = new Character("Target", 100, 20, ElementType.Fire, 0);
+        Character attackerChar = new Character("Attacker", 100, 20, ElementType.Fire, 0, false);
+        Character targetChar = new Character("Target", 100, 20, ElementType.Fire, 0, false);
         Player attacker = new Player(1, "Player 1", attackerChar);
         Player target = new Player(2, "Player 2", targetChar);
 
@@ -33,8 +33,8 @@ public class CombatLogicTests
     [Fact]
     public void DodgeWorksProperly()
     {
-        Character attackerChar = new Character("Attacker", 100, 20, ElementType.Fire, 0);
-        Character targetChar = new Character("Target", 100, 20, ElementType.Fire, 0);
+        Character attackerChar = new Character("Attacker", 100, 20, ElementType.Fire, 0, false);
+        Character targetChar = new Character("Target", 100, 20, ElementType.Fire, 0, false);
         Player attacker = new Player(1, "Player 1", attackerChar);
         Player target = new Player(2, "Player 2", targetChar);
 
