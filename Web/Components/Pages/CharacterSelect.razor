@@ -15,7 +15,7 @@ else if(!Player2Selected)
     <p>Player 2, select your character:</p>
 }
 
-@foreach (var character in gameEngine.Characters)
+@foreach (var character in GameEngine.Characters)
 {
     <div class="card mb-3" style="max-width: 300px;">
         <div class="row g-0">
@@ -49,24 +49,20 @@ else if(!Player2Selected)
 
 
 @code {
-
-    public GameEngine gameEngine = new GameEngine();
     public bool Player1Selected = false;
     public bool Player2Selected = false;
-
-
 
     public void SelectCharacter(Character character)
     {
         if (!Player1Selected)
         {
-            gameEngine.Player1 = new Player(1, "Player 1", character);
+            GameEngine.Player1.PlayerCharacter = character;
             Player1Selected = true;
             character.IsSelected = true;
         }
         else if (!Player2Selected)
         {
-            gameEngine.Player2 = new Player(2, "Player 2", character);
+            GameEngine.Player2.PlayerCharacter = character;
             Player2Selected = true;
             character.IsSelected = true;
         }
@@ -80,7 +76,7 @@ else if(!Player2Selected)
             "Fire Knight" => "Knight.svg",
             "Water Mage" => "Mage.svg",
             "Earth Barbarian" => "Barbarian.svg",
-            "Air Archer" => "Mage.svg"
+            "Air Archer" => "Archer.svg"
         };
     }
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+namespace BackEnd;
+
 public static class CharacterSelection
 {
     public static List<Character> AvailableCharacters { get; private set; }
