@@ -46,6 +46,7 @@
             <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: @(IsPlayer1Turn ? "#e6f3ff" : "#ffe6e6");" @onclick='() => ExecuteAction("Heavy Attack")'>HEAVY ATTACK</button>
             <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: @(IsPlayer1Turn ? "#e6f3ff" : "#ffe6e6");" @onclick='() => ExecuteAction("Elemental attack")'>ELEMENTAL</button>
             <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: @(IsPlayer1Turn ? "#e6f3ff" : "#ffe6e6");" @onclick='() => ExecuteAction("Dodge")'>DODGE STANCE</button>
+            <button style="padding: 10px; font-weight: bold; cursor: pointer; background-color: #f8d7da; grid-column: span 2; border: 2px solid #dc3545; color: #721c24;" @onclick='() => ExecuteAction("Surrender")'>SURRENDER</button>
         </div>
     }
 </div>
@@ -73,6 +74,15 @@
 
         Character attacker = IsPlayer1Turn ? player1 : player2;
         Character target = IsPlayer1Turn ? player2 : player1;
+
+        if (actionType == "Surrender")
+        {
+            winnerName = IsPlayer1Turn ? player2.Name : player1.Name;
+            message = $"{attacker.Name} has surrendered! {winnerName} is the victor by forfeit!";
+            GameOver = true;
+            StateHasChanged();
+            return;
+        }
 
         if (actionType == "Dodge")
         {
