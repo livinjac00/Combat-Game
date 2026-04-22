@@ -1,20 +1,22 @@
 using System;
 using System.Security.AccessControl;
 
-public class GameEngine
+namespace BackEnd;
+
+public static class GameEngine
 {
-    public List<Character> Characters { get; set; } = new List<Character> {
+    public static List<Character> Characters { get; set; } = new List<Character> {
         new Character("Fire Knight", 100, 20, ElementType.Fire, 5, false),
         new Character("Water Mage", 100, 20, ElementType.Water, 5, false),
         new Character("Earth Barbarian", 100, 20, ElementType.Earth, 5, false),
         new Character("Air Archer", 100, 20, ElementType.Air, 5, false)
     };
 
-    public Player? Player1 { get; set; }
-    public Player? Player2 { get; set; }
+    public static Player Player1 { get; set; } = new Player(1, string.Empty, null);
+    public static Player Player2 { get; set; } = new Player(2, string.Empty, null);
 
 
-    public void StartGame()
+    public static void StartGame()
     {
         Console.WriteLine("Welcome to the Combat Game!");
         
@@ -64,7 +66,7 @@ public class GameEngine
         Console.WriteLine("\nGame Over! Thanks for playing.");
     }
 
-    private void ExecuteTurn(Player activePlayer, Player opponent)
+    private static void ExecuteTurn(Player activePlayer, Player opponent)
     {
         Console.WriteLine($"\n>>> {activePlayer.Name}'s Turn <<<");
         

@@ -9,24 +9,24 @@
         <h2>@(IsPlayer1Turn ? "PLAYER 1'S TURN" : "PLAYER 2'S TURN")</h2>
     </div>
 
-    // player top right 
-    <div style="position: absolute; right: 100px; top: 80px; width: 120px; text-align: center;">
-        <div style="font-weight: bold; margin-bottom: 5px;">@player2.Name</div>
+    <!-- player top right -->
+    <div style="position: absolute; right: 100px; top: 80px; width: 140px; text-align: center;">
+        <div style="font-weight: bold; margin-bottom: 5px;">@GameEngine.Player2.Name</div>
         <div style="background-color: #ddd; width: 100%; height: 15px; border: 2px solid #555; border-radius: 8px; margin-bottom: 5px;">
             <div style="background-color: red; width: @(player2.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
         </div>
         <div>@player2.Health / 100 HP</div>
-        <div style="width: 80px; height: 80px; background-color: #ff4d4d; margin: 10px auto; border-radius: 10px; border: 3px solid #900; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white; @(!IsPlayer1Turn ? "border-color: #00ff00; box-shadow: 0 0 15px #00ff00;" : "")">
-            P2
-        </div>
+           <img src="@GetCharacterImage(player2.Name)"
+               alt="@player2.Name"
+             style="width: 90px; height: 90px; margin: 10px auto; display: block; object-fit: contain; @( !IsPlayer1Turn ? "filter: drop-shadow(0 0 8px #00ff00);" : "")" />
     </div>
 
-    // player bottom left 
-    <div style="position: absolute; left: 100px; bottom: 150px; width: 120px; text-align: center;">
-        <div style="width: 80px; height: 80px; background-color: #4da6ff; margin: 10px auto; border-radius: 10px; border: 3px solid #0059b3; display: flex; align-items: center; justify-content: center; font-size: 2em; color: white; @(IsPlayer1Turn ? "border-color: #00ff00; box-shadow: 0 0 15px #00ff00;" : "")">
-            P1
-        </div>
-        <div style="font-weight: bold; margin-top: 5px;">@player1.Name</div>
+    <!-- player bottom left -->
+    <div style="position: absolute; left: 100px; bottom: 150px; width: 140px; text-align: center;">
+           <img src="@GetCharacterImage(player1.Name)"
+               alt="@player1.Name"
+             style="width: 90px; height: 90px; margin: 10px auto; display: block; object-fit: contain; @(IsPlayer1Turn ? "filter: drop-shadow(0 0 8px #00ff00);" : "")" />
+        <div style="font-weight: bold; margin-top: 5px;">@GameEngine.Player1.Name</div>
         <div style="background-color: #ddd; width: 100%; height: 15px; border: 2px solid #555; border-radius: 8px; margin-top: 5px;">
             <div style="background-color: #00ff00; width: @(player1.Health)%; height: 100%; border-radius: 5px; transition: width 0.5s;"></div>
         </div>
@@ -59,8 +59,8 @@
 }
 
 @code {
-    Character player1 = new Character("Player 1", 100, 10, ElementType.Fire, 5, false);
-    Character player2 = new Character("Player 2", 100, 10, ElementType.Water, 5, false);
+    Character player1 = GameEngine.Player1.PlayerCharacter ?? new Character("Player 1", 100, 10, ElementType.Fire, 5, false);
+    Character player2 = GameEngine.Player2.PlayerCharacter ?? new Character("Player 2", 100, 10, ElementType.Water, 5, false);
 
     bool IsPlayer1Turn = true;
     bool GameOver = false;
@@ -116,5 +116,17 @@
     public void GoToEndScreen()
     {
         navigation.NavigateTo($"/end-screen?winner={Uri.EscapeDataString(winnerName)}");
+    }
+
+    private string GetCharacterImage(string? characterName)
+    {
+        return characterName switch
+        {
+            "Fire Knight" => "/Knight.svg",
+            "Water Mage" => "/Mage.svg",
+            "Earth Barbarian" => "/Barbarian.svg",
+            "Air Archer" => "/Archer.svg",
+            _ => "/Knight.svg"
+        };
     }
 }
